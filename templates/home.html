@@ -1,0 +1,38 @@
+{% extends '_base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="home-container">
+
+    <h1>🤖 Chat A.I+</h1>
+    <p class="subtitle">
+        تجربه‌ی گفتگو با هوش مصنوعی، ساده و هوشمند
+    </p>
+
+    {% if user.is_authenticated %}
+        <form action="#" method="get" style="margin-top: .5rem">
+            <button type="submit" class="primary-btn">
+                شروع گفتگو
+            </button>
+        </form>
+    {% else %}
+        <div class="auth-buttons" style="margin-top: .5rem">
+
+            <form action="{% url 'account_login' %}" method="get">
+                <button type="submit" class="primary-btn">
+                    ورود
+                </button>
+            </form>
+
+            <form action="{% url 'account_signup' %}" method="get">
+                <button type="submit" class="secondary-btn">
+                    ثبت‌نام
+                </button>
+            </form>
+
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

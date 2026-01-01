@@ -1,0 +1,33 @@
+{% extends "_base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block title %}ورود{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+
+    <div class="auth-card">
+        <h2>ورود به حساب کاربری</h2>
+        <p class="auth-subtitle">
+            برای ادامه وارد حساب خود شوید
+        </p>
+
+        <form method="post" action="{% url 'account_login' %}">
+            {% csrf_token %}
+
+            {{ form|crispy }}
+
+            <button type="submit" class="primary-btn full-width">
+                ورود
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <span>حساب ندارید؟</span>
+            <a href="{% url 'account_signup' %}">ثبت‌نام کنید</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
