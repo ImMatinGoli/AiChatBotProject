@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import *
+
+from . import views
 
 urlpatterns = [
-    path('logout_confirm/', LogOutConfirmView.as_view(), name='logout_confirm'),
+    path('logout_confirm/', views.logout_confirm_view, name='logout_confirm'),
 ]

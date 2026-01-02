@@ -1,33 +1,82 @@
 {% extends "_base.html" %}
 {% load i18n %}
-{% load crispy_forms_tags %}
+{#{% load account socialaccount %}#}
 
-{% block title %}ورود{% endblock %}
+{% block title %}ورود به حساب کاربری{% endblock %}
 
 {% block content %}
-<div class="auth-page">
+    <div class="d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+        <div class="card shadow-lg border-0 rounded-4" style="width: 100%; max-width: 400px;">
+            <div class="card-body p-4 p-sm-5">
 
-    <div class="auth-card">
-        <h2>ورود به حساب کاربری</h2>
-        <p class="auth-subtitle">
-            برای ادامه وارد حساب خود شوید
-        </p>
+                <div class="text-center mb-4">
+                    <div class="bg-light d-inline-block p-3 rounded-circle mb-3 text-primary">
+                        <i class="bi bi-person-circle fs-2"></i>
+                    </div>
+                    <h4 class="fw-bold">خوش برگشتی!</h4>
+                    <p class="text-secondary small">برای ادامه وارد حساب خود شوید</p>
+                </div>
 
-        <form method="post" action="{% url 'account_login' %}">
-            {% csrf_token %}
+                <form class="login" method="POST" action="{% url 'account_login' %}">
+                    {% csrf_token %}
 
-            {{ form|crispy }}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger py-2 small rounded-3">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
 
-            <button type="submit" class="primary-btn full-width">
-                ورود
-            </button>
-        </form>
+                    <div class="mb-3">
+                        <label class="form-label small text-muted fw-bold">آدرس ایمیل</label>
+                        <input type="email" name="login" placeholder="name@example.com"
+                               class="form-control form-control-lg fs-6 rounded-3 bg-light border-0 {% if form.login.errors %}is-invalid{% endif %}"
+                               required id="id_login">
+                        {% if form.login.errors %}
+                            <div class="invalid-feedback">{{ form.login.errors.0 }}</div>
+                        {% endif %}
+                    </div>
 
-        <div class="auth-footer">
-            <span>حساب ندارید؟</span>
-            <a href="{% url 'account_signup' %}">ثبت‌نام کنید</a>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label small text-muted fw-bold">رمز عبور</label>
+                            <a href="{% url 'account_reset_password' %}"
+                               class="small text-decoration-none text-primary fw-bold">رمز را فراموش کردی؟</a>
+                        </div>
+                        <input type="password" name="password" placeholder="••••••••"
+                               class="form-control form-control-lg fs-6 rounded-3 bg-light border-0 {% if form.password.errors %}is-invalid{% endif %}"
+                               required id="id_password" autocomplete="off">
+                        {% if form.password.errors %}
+                            <div class="invalid-feedback">{{ form.password.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        <input type="checkbox" name="remember" class="form-check-input" id="id_remember">
+                        <label class="form-check-label small text-secondary" for="id_remember">مرا به خاطر بسپار</label>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-lg rounded-3 fw-bold" type="submit">
+                            ورود به حساب
+                        </button>
+
+                    </div>
+
+                    {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                    {% endif %}
+                </form>
+            </div>
+
+            <div class="card-footer bg-white border-0 text-center py-3 rounded-bottom-4">
+                <small class="text-secondary">
+                    حساب کاربری ندارید؟
+                    <a href="{% url 'account_signup' %}" class="text-primary fw-bold text-decoration-none">ثبت‌نام
+                        کنید</a>
+                </small>
+            </div>
         </div>
     </div>
-
-</div>
 {% endblock %}

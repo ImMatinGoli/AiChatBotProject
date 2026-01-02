@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.views import generic
+from django.contrib.auth.decorators import login_required
 
-class LogOutConfirmView(generic.TemplateView):
-    template_name = 'account/logout_confirm.html'
+@login_required(login_url='/accounts/login/')
+def logout_confirm_view(request):
+    return render(request, 'accounts/logout_confirm.html')
