@@ -15,10 +15,6 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icons/favicon.png' %}">
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-    <style>
-        .cursor-pointer { cursor: pointer; }
-    </style>
 </head>
 <body>
 
@@ -87,32 +83,14 @@
                     <div class="dropdown">
                         <button class="btn btn-link text-decoration-none text-dark fw-bold d-flex align-items-center gap-2 p-0"
                                 type="button" data-bs-toggle="dropdown">
-                            <span id="selectedModelText">{% block header_title %}GPT-4o{% endblock %}</span>
+                            {% block header_title %}GPT-4o{% endblock %}
                             <i class="bi bi-chevron-down fs-6 text-secondary"></i>
                         </button>
-
                         <ul class="dropdown-menu shadow-sm border-0 mt-2">
-                            <li>
-                                <a class="dropdown-item cursor-pointer" onclick="setModel('gpt-4o', 'GPT-4o')">
-                                    <i class="bi bi-stars text-warning me-2"></i>GPT-4o
-                                </a>
+                            <li><a class="dropdown-item active" href="#"><i class="bi bi-stars text-warning me-2"></i>GPT-4o</a>
                             </li>
-                            <li>
-                                <a class="dropdown-item cursor-pointer" onclick="setModel('gpt-3.5-turbo', 'GPT-3.5 Turbo')">
-                                    <i class="bi bi-lightning-charge text-primary me-2"></i>GPT-3.5 Turbo
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item cursor-pointer" onclick="setModel('gemini-pro', 'Gemini Pro')">
-                                    <i class="bi bi-google text-success me-2"></i>Gemini Pro
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item cursor-pointer" onclick="setModel('llama-2', 'Llama 2 (Local)')">
-                                    <i class="bi bi-hdd-network text-info me-2"></i>Llama 2
-                                </a>
-                            </li>
+                            <li><a class="dropdown-item" href="#"><i
+                                    class="bi bi-lightning-charge text-primary me-2"></i>GPT-3.5 Turbo</a></li>
                         </ul>
                     </div>
                     <span class="badge bg-light text-secondary ms-2 border d-none d-sm-inline-block rounded-pill px-2">Beta</span>
@@ -206,7 +184,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // --- 1. مدیریت سایدبار موبایل ---
         const sidebar = document.getElementById('mainSidebar');
         const overlay = document.getElementById('sidebarOverlay');
         const toggleBtn = document.getElementById('toggleSidebar');
@@ -220,33 +197,7 @@
         if (toggleBtn) toggleBtn.addEventListener('click', toggleMenu);
         if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
         if (overlay) overlay.addEventListener('click', toggleMenu);
-
-        // --- 2. مدیریت انتخاب مدل هوش مصنوعی ---
-        const savedKey = localStorage.getItem('selectedModelKey');
-        const savedName = localStorage.getItem('selectedModelName');
-
-        // اگر قبلا مدلی انتخاب شده و الان توی چت جدید هستیم، اون مدل رو ست کن
-        // (چک میکنیم که توی صفحه دیتیل چت نباشیم، چون اونجا مدل از دیتابیس میاد)
-        if (savedKey && savedName && !window.location.href.includes('/c/')) {
-            setModel(savedKey, savedName);
-        }
     });
-
-    // --- تابع اصلی تغییر مدل ---
-    // این تابع هم متن نوبار رو عوض میکنه، هم اینپوت مخفی فرم رو
-    window.setModel = function(modelKey, modelName) {
-        // تغییر متن نمایشی در نوبار
-        const headerText = document.getElementById('selectedModelText');
-        if (headerText) headerText.innerText = modelName;
-
-        // تغییر مقدار مخفی فرم ارسال (اگر در صفحه چت باشیم)
-        const inputField = document.getElementById('modelInput');
-        if (inputField) inputField.value = modelKey;
-
-        // ذخیره در حافظه مرورگر برای دفعات بعد
-        localStorage.setItem('selectedModelKey', modelKey);
-        localStorage.setItem('selectedModelName', modelName);
-    }
 </script>
 
 </body>

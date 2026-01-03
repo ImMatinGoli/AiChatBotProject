@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'accounts',
     'pages',
+    'chat',
 
     'allauth',
     'allauth.account',
@@ -78,6 +79,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'chat.context_processors.user_conversations',
             ],
         },
     },
@@ -146,4 +148,3 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False
-

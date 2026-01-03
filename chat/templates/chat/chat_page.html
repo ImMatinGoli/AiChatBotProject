@@ -1,0 +1,104 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<div class="chat-container d-flex flex-column h-100">
+
+    {% if not messages and not current_conversation %}
+        <div class="d-flex flex-column align-items-center justify-content-center h-100 text-center text-secondary">
+            <i class="bi bi-robot fs-1 mb-3 text-primary opacity-50"></i>
+            <h3>چطور می‌توانم کمکتان کنم؟</h3>
+
+            <div class="d-flex gap-3 mt-5 flex-wrap justify-content-center">
+                <div class="card p-3 shadow-sm border-0 model-card" style="width: 200px; cursor: pointer; transition: transform 0.2s;" onclick="selectModelFromCard('gpt-4o', 'GPT-4o')">
+                    <div class="text-warning fs-3 mb-2"><i class="bi bi-stars"></i></div>
+                    <h6 class="fw-bold">GPT-4o</h6>
+                    <small class="text-secondary">هوشمندترین مدل</small>
+                </div>
+
+                <div class="card p-3 shadow-sm border-0 model-card" style="width: 200px; cursor: pointer; transition: transform 0.2s;" onclick="selectModelFromCard('gemini-pro', 'Gemini Pro')">
+                    <div class="text-success fs-3 mb-2"><i class="bi bi-google"></i></div>
+                    <h6 class="fw-bold">Gemini Pro</h6>
+                    <small class="text-secondary">سرعت و دقت گوگل</small>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="flex-grow-1 overflow-auto p-3" id="messagesArea">
+        {% for msg in messages %}
+            <div class="message-row {% if msg.role == 'user' %}user{% else %}bot{% endif %}">
+
+                <div class="avatar {% if msg.role == 'user' %}user-avatar{% else %}bot-avatar{% endif %} shadow-sm"
+                     style="{% if msg.role == 'user' %}padding: 0; overflow: hidden;{% endif %}">
+
+                    {% if msg.role == 'user' %}
+                        {% if user.photo %}
+                            <img src="{{ user.photo.url }}" style="width: 100%; height: 100%; object-fit: cover;" alt="User">
+                        {% else %}
+                            <img src="/media/cover/default.png" style="width: 100%; height: 100%; object-fit: cover;" alt="Default">
+                        {% endif %}
+                    {% else %}
+                        <i class="bi bi-robot"></i>
+                    {% endif %}
+
+                </div>
+                <div class="bubble shadow-sm">
+                    {{ msg.content|linebreaksbr }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="input-area bg-white">
+        <form method="post" action="." class="prompt-box d-flex align-items-end p-2">
+            {% csrf_token %}
+
+            <input type="hidden" name="model" id="modelInput" value="gpt-4o">
+
+            <textarea name="message" class="prompt-input" rows="1" placeholder="پیامی بنویسید..." required style="min-height: 50px;"></textarea>
+            <button type="submit" class="send-btn shadow-sm mb-2 ms-2">
+                <i class="bi bi-arrow-up-short fs-4"></i>
+            </button>
+        </form>
+        <div class="text-center mt-2">
+            <small class="text-secondary" style="font-size: 0.7rem;">هوش مصنوعی ممکن است اشتباه کند.</small>
+        </div>
+    </div>
+</div>
+
+<script>
+    const messagesArea = document.getElementById('messagesArea');
+    if(messagesArea) {
+        messagesArea.scrollTop = messagesArea.scrollHeight;
+    }
+
+    function selectModelFromCard(modelKey, modelName) {
+        const inputField = document.getElementById('modelInput');
+        if (inputField) {
+            inputField.value = modelKey;
+            console.log("مدل تغییر کرد به:", modelKey);
+        }
+
+        const headerText = document.getElementById('selectedModelText');
+        if (headerText) {
+            headerText.innerText = modelName;
+        }
+
+        if (typeof setModel === "function") {
+             setModel(modelKey, modelName);
+        } else {
+             localStorage.setItem('selectedModelKey', modelKey);
+             localStorage.setItem('selectedModelName', modelName);
+        }
+
+        document.querySelector('.prompt-input').focus();
+    }
+</script>
+
+<style>
+    .model-card:hover {
+        transform: translateY(-5px);
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}
